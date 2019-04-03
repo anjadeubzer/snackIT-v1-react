@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import SearchSnacks from './Snack/SearchSnacks';
 import FilterSnacks from './Snack/FilterSnacks';
 
+// helper components
+import PropTypes from 'prop-types';
+
+// importing images for the component
+import heroImg from './assets/img/fogg-coffee-break.png' // relative path to image
+
+
 // @material-ui components
 import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
@@ -10,13 +17,10 @@ import SearchIcon from '@material-ui/icons/Search';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FilterIcon from '@material-ui/icons/FilterList';
 
-// helper components
-import PropTypes from 'prop-types';
 
-//helper functions
+
+// material UI styling
 import { withStyles } from '@material-ui/core/styles';
-
-
 
 const styles = theme => ({
 	heroSection: {
@@ -24,21 +28,27 @@ const styles = theme => ({
 		// backgroundColor: theme.palette.background.paper,
 	},
 	heroContent: {
-		// maxWidth: 600,
 		margin: '0 auto',
-		padding: `${theme.spacing.unit * 8}px 0 0`,
-		backgroundColor: theme.palette.primary.main,
-		backgroundImage: "url('https://placeimg.com/1000/400/any')",
-		backgroundSize: "cover",
+		padding: `${theme.spacing.unit * 8}px 0 0 ${theme.spacing.unit * 11}px`,
+		backgroundColor: theme.palette.primary.contrastText,
+		backgroundImage: `url(${heroImg})`,
+		backgroundSize: 'auto 95%',
+		backgroundRepeat: 'no-repeat',
+		backgroundPosition: '0% 50%',
+	},
+	heroHeadline: {
+		fontSize: '8vw',
+		fontWeight: '500',
 	},
 
 	tabsContainer: {
-		// marginBottom: theme.spacing.unit * 4,
+		type: 'dark',
+		marginLeft: `-${theme.spacing.unit * 11}px`,
 		marginTop: theme.spacing.unit * 6,
-		backgroundColor: theme.palette.primary.dark,
+		backgroundColor: theme.palette.secondary.light,
 	},
 	tabbedContent: {
-		color: theme.palette.primary.contrastText,
+		// color: theme.palette.primary.contrastText,
 		flexGrow: 1,
 		minHeight: 80,
 		padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 3}px`,
@@ -68,11 +78,11 @@ class SnackHero extends Component {
 			<section className={classes.heroSection}>
 				<div className={classes.heroContent}>
 
-					<Typography variant="display4" align="center" color="textPrimary">
+					<Typography variant="h1" align="center" className={classes.heroHeadline}>
 						Welcome
 					</Typography>
 
-					<Typography variant="display2" align="center" gutterBottom>
+					<Typography variant="h4" align="center" gutterBottom>
 						Choose your snack …
 					</Typography>
 

@@ -28,6 +28,7 @@ const styles = theme => ({
 	card: {
 		display: 'flex',
 		// minHeight: 100,
+		backgroundColor: theme.palette.primary.main,
 	},
 	cardAction: {
 		display: 'flex',
@@ -106,11 +107,11 @@ const SnackItem = ( props ) => {
 						/>
 						<CardContent className={classes.content}>
 
-							<Typography variant="headline">
+							<Typography component="h3" variant="h5">
 								{ title.rendered }
 							</Typography>
 
-							<Typography variant="subheading" className={classes.snackBrand} gutterBottom>
+							<Typography variant="subtitle1" className={classes.snackBrand} gutterBottom>
 								{ snack_brand }
 							</Typography>
 
@@ -125,7 +126,7 @@ const SnackItem = ( props ) => {
 								<DeleteIcon fontSize="large" />
 							</div>
 							<div className={classes.actionsChild}>
-								<Typography variant="subheading">
+								<Typography variant="subtitle1">
 									{formatPrice( snack_price )}
 								</Typography>
 							</div>
