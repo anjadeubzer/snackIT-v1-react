@@ -4,16 +4,16 @@ import Cookies from "js-cookie";
 import formurlencoded from "form-urlencoded";
 
 // Import components
-import { init as SnackPosts } from "./SnackPosts";
-import { render as UserLoginForm } from "./User/UserLoginForm";
-import { render as UserLogoutForm } from "./User/UserLogoutForm";
-import { render as Editor } from "./Editor";
-import { render as Notice } from "./Notice";
+import { init as SnackPosts } from "../SnackPosts";
+import { render as UserLoginForm } from "../UserLoginForm";
+import { render as UserLogoutForm } from "../UserLogoutForm";
+import { render as Editor } from "../Editor.js";
+import { render as message } from "../message.js";
 
 // Import configs
 import { state, setState } from "./state";
 import { getEl removeEl } from "../jwthelpers.js";
-import { UserLoginForm, UserLogoutForm, editor, username, password } from "../config";
+import { UserLoginForm, UserLogoutForm, Editor } from "../config";
 
 /**
  * Kicks off the authentication process
@@ -24,14 +24,14 @@ export function init() {
   // Check cookie to see if already authenticated
   if (Cookies.get(state.token) === undefined) {
     // Run logout tasks since not authenticated
-    lougout();
+    Userlougout();
     // Setup the login process
-    initLogin();
+    initUserLogin();
   } else {
     // Run login tasks since authenticated
-    login();
+    Userlogin();
     // Setup the logout process
-    initLogout();
+    initUserLogout();
   }
 }
 
@@ -40,10 +40,10 @@ export function init() {
  *
  * @export function
  */
-export function login() {
+export function Userlogin() {
   // Set the loggedIn statis to true
-  setState("loggedIn", true);
-  console.log(state.loggedIn);
+  setState("UserloggedIn", true);
+  console.log(state.UserloggedIn);
   // Toggle login/logout forms
   getEl(loginBtn).classList.add("hidden");
   getEl(logoutBtn).classList.remove("hidden");
@@ -56,10 +56,10 @@ export function login() {
  *
  * @export function
  */
-export function logout() {
+export function Userlogout() {
   // Set the loggedIn statis to false
-  setState("loggedIn", false);
-  console.log(state.loggedIn);
+  setState("UserloggedIn", false);
+  console.log(state.UserloggedIn);
   // Toggle login/logout forms
   getEl(loginBtn).classList.remove("hidden");
   getEl(logoutBtn).classList.add("hidden");
@@ -72,7 +72,7 @@ export function logout() {
  *
  * @export function
  */
-export function initLogin() {
+export function initUserLogin() {
   // Replace login button with a clone to remove event listeners
   const prevLogin = getEl(loginBtn);
   const newLogin = prevLogin.cloneNode(true);
@@ -129,7 +129,7 @@ export function initLogin() {
  *
  * @export function
  */
-export function initLogout() {
+export function initUserLogout() {
   // Replace logout button with a clone to remove event listeners
   const prevLogout = getEl(logoutBtn);
   const newLogout = prevLogout.cloneNode(true);

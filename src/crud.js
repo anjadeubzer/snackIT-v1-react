@@ -3,9 +3,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // Import components
-import { clear as clearEditor } from "./components/Editor";
-import { render as Notice } from "./components/Notice";
-import { init as SnackPosts } from "./components/SnackPosts";
+import { clear as clearEditor } from "../Editor";
+import { render as Notice } from "../Notice";
+import { init as SnackPosts } from "../SnackPosts";
 
 // Import configs
 import { state } from "../state";

@@ -9,7 +9,7 @@ import { UserLoginForm, username, password } from "./config";
  */
 export function render() {
   // Make sure logged out and form is not rendered already
-  if (state.loggedIn === true || isRendered(UserLoginForm)) {
+  if (state.UserloggedIn === true || isRendered(UserLoginForm)) {
     return;
   }
 

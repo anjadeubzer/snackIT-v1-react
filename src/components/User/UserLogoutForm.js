@@ -1,7 +1,7 @@
 // Import configs
 import { state } from "../state";
-import { getEl, isRendered } from "./HelperFunctions/jwthelpers";
-import { UserLogoutForm } from "./config";
+import { getEl, isRendered } from "../jwthelpers";
+import { UserLogoutForm } from "../config";
 
 /**
  * Display the logout form
@@ -11,7 +11,7 @@ import { UserLogoutForm } from "./config";
  */
 export function render() {
   // Make sure logged in and form is not already rendered
-  if (state.loggedIn === false || isRendered(UserLogoutForm)) {
+  if (state.UserloggedIn === false || isRendered(UserLogoutForm)) {
     return;
   }
   // Setup the logout form
