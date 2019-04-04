@@ -5,29 +5,30 @@ import SplashStart from './components/SplashScreen/SplashStart';
 import NavBar from './components/NavBar';
 import SnackHero from './components/SnackHero';
 import SnackList from './components/Snack/SnackList';
-// import Cart from './components/Cart/Cart';
 
-// styles
+
+
+// material UI styling
 import 'typeface-roboto';
 import './App.css';
-
-
-
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles/index';
 
 const theme = createMuiTheme({
 	palette: {
-		type: 'dark',
+		// type: 'dark',
+		typography: {
+			useNextVariants: true,
+		},
 		primary: {
-			light: '#5db8ff',
+			light: '#8BC8E8',
 			main: '#0088ce',
 			dark: '#005b9d',
 			contrastText: '#fff',
 		},
 		secondary: {
-			light: '#ffbd45',
-			main: '#fb8c00',
-			dark: '#c25e00',
+			light: '#FFCC8B',
+			main: '#ff8f00',
+			dark: '#BA6900',
 			contrastText: '#fff',
 		},
 	},
@@ -46,15 +47,20 @@ class App extends Component {
 		searchString: "",
 	};
 
+
+
+
 	componentWillMount() {
-		this.getSnackItems();
+		this.getSnackData();
 	}
 
 
 	// fetch the data from wordpress
-	getSnackItems = () => {
+	getSnackData = () => {
 		// let dataURL = "http://hackathon.local/wp-json/wp/v2/";
-		let dataURL = "https://snackit.ritapbest.io/wp-json/wp/v2/";
+		let dataURL = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+		// let dataURL = "https://snackit.ritapbest.io/wp-json/wp/v2/";
+
 
 		fetch(dataURL + 'snack?_embed=1&per_page=100')
 			.then(res => res.json())
@@ -62,7 +68,8 @@ class App extends Component {
 				this.setState({
 					snacks: res,
 					filteredSnacks: res,
-			  	})
+			  	});
+				localStorage.setItem('local_snacks', JSON.stringify(res));
 			});
 
 		fetch(dataURL + 'snack_groups')
@@ -70,7 +77,8 @@ class App extends Component {
 			.then(res => {
 				this.setState({
 					snackGroups: res,
-				})
+				});
+				localStorage.setItem('local_snack_groups', JSON.stringify(res));
 			});
 	};
 
