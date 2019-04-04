@@ -4,16 +4,16 @@ import Cookies from "js-cookie";
 import formurlencoded from "form-urlencoded";
 
 // Import components
-import { init as SnackPosts } from "../SnackPosts";
-import { render as UserLoginForm } from "../UserLoginForm";
-import { render as UserLogoutForm } from "../UserLogoutForm";
-import { render as Editor } from "../Editor.js";
-import { render as message } from "../message.js";
+import { init as SnackPosts } from "SnackPosts";
+import { render as UserLoginForm } from "User/UserLoginForm";
+import { render as UserLogoutForm } from "User/UserLogoutForm";
+import { render as Editor } from "Editor";
+import { render as message } from "message";
 
 // Import configs
 import { state, setState } from "./state";
-import { getEl removeEl } from "../jwthelpers.js";
-import { UserLoginForm, UserLogoutForm, Editor } from "../config";
+import { getEl, removeEl } from "HelperFunctions/jwthelpers";
+import { UserLoginFormId, UserLogoutFormId, EditorId } from "../config";
 
 /**
  * Kicks off the authentication process
