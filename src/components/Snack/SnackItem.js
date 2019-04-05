@@ -116,7 +116,7 @@ const SnackItem = ( props ) => {
 							</Typography>
 
 							<Typography variant="body1">
-								{ snack_size }ml
+								{ snack_size }
 								{/*{Object.keys( props.snack._embedded["wp:term"][1] ).map( key => ( <a key={ key } index={ key } href={'#' + props.snack._embedded["wp:term"][1][key].name} >{props.snack._embedded["wp:term"][1][key].name}</a> ))}*/}
 							</Typography>
 
