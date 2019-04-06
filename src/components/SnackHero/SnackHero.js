@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import SearchSnacks from './Snack/SearchSnacks';
-import FilterSnacks from './Snack/FilterSnacks';
+
+// child components
+import SearchSnacks from '../SearchSnacks';
+import FilterSnacks from '../FilterSnacks';
 
 // helper components
 import PropTypes from 'prop-types';
 
 // importing images for the component
-import heroImg from './assets/img/fogg-coffee-break.png' // relative path to image
+import heroImg from '../assets/img/fogg-coffee-break.png' // relative path to image
 
 
 // @material-ui components

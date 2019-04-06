@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import DocumentTitle from 'react-document-title';
 
 // adding a abstraction layer where I will handle all the REST API fetch processing
-import { Snacks } from '../SnackItFetch';
+import { Snacks } from '../SnackItContext';
 
 // child components / pages
 import LoginPage from '../LoginPage';

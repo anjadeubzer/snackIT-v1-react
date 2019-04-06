@@ -1,24 +1,19 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 
-// @material-ui components
-
-// child components
-
-// fetch the data from wordpress
-
-const SnackItContext = React.createContext();
-
 
 /**
- * SnackItFetch Component
+ * SnackItContext Component
  *
- * Explain what it does.
+ * fetch the data from wordpress
+ * Filter out unused data
+ * and provide it via context
  *
  * @class
  * @augments which parent component does have this class nested
  *
  */
+const SnackItContext = React.createContext();
 const Snacks = ( props ) => {
     const [ snacks, setSnacks ] = useState( [] );
     const [ error, setError ] = useState( false );
@@ -72,6 +67,9 @@ const Snacks = ( props ) => {
 
     return (
         <Fragment>
+            { error &&
+            <Redirect to={ `/error/${ error }` } />
+            }
             <SnackItContext.Provider value={ snacks }>
                 { props.children }
             </SnackItContext.Provider>

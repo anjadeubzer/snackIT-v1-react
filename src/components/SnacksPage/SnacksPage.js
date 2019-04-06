@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 // import Element from '@material-ui/core/Element';
 
 // child components
-import SnackList from '../Snack/SnackList';
+import SnackList from '../SnackList';
 import SnackHero from '../SnackHero';
 import NavBar from '../NavBar';
 
@@ -76,10 +76,6 @@ const filterSnacks = ( filterTerm ) => {
     })
 };
 
-const filterSnacksByCategory = ( searchArray ) => {
-
-};
-
 // getting State from Search
 const typeSearch = ( searchString ) => {
     this.setState({
@@ -94,7 +90,6 @@ const filterSearch = ( searchArray ) => {
     this.setState({
         searchArray: searchArray,
     });
-    this.filterSnacksByCategory( searchArray );
     console.log( searchArray );
 };
 
@@ -129,8 +124,8 @@ class SnacksPage extends Component {
 						{ /** Hero unit - a decorative visual header
                          * that helps to understand where you are **/}
                         <SnackHero
-                            filterSearch={this.filterSearch}
-                            typeSearch={this.typeSearch}
+                            filterSearch={filterSearch}
+                            typeSearch={typeSearch}
                             snackGroups={this.props.snackGroups}
                         />
 
