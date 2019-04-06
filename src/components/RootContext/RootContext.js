@@ -24,7 +24,7 @@ export default ({ children }) => {
     };
 
     return (
-        <RootContext.Provider value={defaultContext}>
+        <RootContext.Provider value={ defaultContext }>
           {children}
         </RootContext.Provider>
     );

@@ -1,5 +1,6 @@
-import React, { Fragment } from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import React, { Fragment, useContext } from 'react';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { RootContext } from '../RootContext';
 
 // helper components
 import DocumentTitle from 'react-document-title';
@@ -14,8 +15,9 @@ import ProfilePage from '../ProfilePage';
 // import ErrorMessage from '../ErrorMessage';
 // import NotFound from '../NotFound';
 
+const Router = ({ render, ...routeProps }) => {
+    const  authenticated  = useContext(RootContext);
 
-const Router = () => {
     return (
         <Fragment>
             <DocumentTitle title="SnackIT – your fridge app" />
@@ -23,10 +25,21 @@ const Router = () => {
                 <Snacks>
                     <Switch>
                         <Route exact path="/" component={ LoginPage } />
-                        <Route exact path="/snacks" component={ SnacksPage } />
-                        <Route exact path="/profile" component={ ProfilePage } />
+                        <Route
+                            exact
+                            render={() => ( authenticated ? render() : <Redirect to='/' />)}
+                            path="/snacks"
+                            // component={ LoginPage }
+                        />
+                        <Route
+                            exact
+                            render={() => ( authenticated ? render() : <Redirect to='/' />)}
+                            path="/profile"
+                            // component={ ProfilePage }
+                        />
                         {/*<Route path="/error/:message/" component={ ErrorMessage } />*/}
                         {/*<Route component={ NotFound } />*/}
+
                     </Switch>
                 </Snacks>
             </BrowserRouter>
