@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 
 // child components
 import { SnackItContext } from '../SnackItContext';
-import SnackItem from '../SnackItem';
+import SnackItem from '../SnackItem/SnackItem';
 
 // helper functions
 // import 'SnackList.scss';

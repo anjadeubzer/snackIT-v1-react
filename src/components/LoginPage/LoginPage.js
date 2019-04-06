@@ -1,5 +1,9 @@
 import React, { Fragment } from 'react';
 
+import { state } from "../state";
+import { getEl, createEl, isRendered } from "../helpers.js";
+import { sidebar, loginForm, username, password } from "../config";
+
 import PropTypes from 'prop-types';
 
 // @material-ui components
@@ -105,4 +109,3 @@ LoginPage.propTypes = {
 };
 
 export default withStyles(styles)(LoginPage);
-
