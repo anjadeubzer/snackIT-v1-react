@@ -19,6 +19,7 @@ import PropTypes from 'prop-types';
 
 // helper functions
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from 'react-router-dom';
 
 
 
@@ -54,8 +55,9 @@ class NavBar extends Component {
 		this.setState({ anchorEl: event.currentTarget });
 	};
 
-	handleClose = () => {
+	handleClose = ( href ) => {
 		this.setState({ anchorEl: null });
+		this.props.history.push( href );
 	};
 
 
@@ -126,4 +128,4 @@ class NavBar extends Component {
 
 NavBar.propTypes = { classes: PropTypes.object.isRequired };
 
-export default withStyles(styles)(NavBar);
+export default withStyles(styles)( withRouter( NavBar ) );

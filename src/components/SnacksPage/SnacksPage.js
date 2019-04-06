@@ -104,6 +104,15 @@ const filterSearch = ( searchArray ) => {
  *
  */
 class SnacksPage extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            searchArray: [],
+            searchString: [],
+        };
+    };
+
     render() {
         return (
             <div className="SnackIT">
@@ -119,28 +128,24 @@ class SnacksPage extends Component {
                 <NavBar />
 
 
-					<main>
+                <main>
+                    { /** Hero unit - a decorative visual header
+                     * that helps to understand where you are **/}
+                    <SnackHero
+                        filterSearch={filterSearch}
+                        typeSearch={typeSearch}
+                        snackGroups={this.props.snackGroups}
+                    />
 
-						{ /** Hero unit - a decorative visual header
-                         * that helps to understand where you are **/}
-                        <SnackHero
-                            filterSearch={filterSearch}
-                            typeSearch={typeSearch}
-                            snackGroups={this.props.snackGroups}
-                        />
+                    {/** -- list of snacks
+                     * a grid with grid items expanding on touch/click
+                     * todo: expanding on click
+                     * todo: buy with one click ( has to be a simple fast process again ) **/}
+                    <SnackList />
 
-                        {/** -- list of snacks
-                         * a grid with grid items expanding on touch/click
-                         * todo: expanding on click
-                         * todo: buy with one click ( has to be a simple fast process again ) **/}
-                        <SnackList />
+                </main>
 
-					</main>
-
-
-                {/** -- shortcut link to current checkouts and archived checkouts **/}
-                {/*<Cart/>*/}
-				</div>
+            </div>
         );
     }
 }

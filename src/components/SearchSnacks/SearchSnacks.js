@@ -165,16 +165,13 @@ function getSuggestions(value) {
 
 
 class DownshiftMultiple extends Component {
-	constructor() {
-		super();
-		this.state = {
-			inputValue: '',
-			selectedItem: [],
-			searchArray: [],
-			searchString: [],
-		};
-	};
-
+    constructor() {
+        super();
+        this.state = {
+            inputValue: '',
+            selectedItem: [],
+        };
+    };
 	handleKeyDown = event => {
 		const { inputValue, selectedItem } = this.state;
 		if (selectedItem.length && !inputValue.length && event.key === 'Backspace') {

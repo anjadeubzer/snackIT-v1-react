@@ -52,7 +52,7 @@ const Snacks = ( props ) => {
                             description: snack.meta.snack_description,
                             snack_size: snack.meta.snack_size,
                             snack_price: snack.meta.snack_price,
-                            snack_brand: snack.meta.snack_brand,
+                            snack_brand: (snack.meta.snack_brand ? snack.meta.snack_brand : '-' ),
                             imageUrl: defaultImageUrl,
                         }
                     );

@@ -18,7 +18,7 @@ import Typography from '@material-ui/core/Typography';
 // child components
 import NavBar from '../NavBar';
 
-// styles 
+// styles
 import withStyles from '@material-ui/core/styles/withStyles';
 const styles = theme => ({
     main: {
@@ -57,8 +57,10 @@ function LoginPage(props) {
 
     return (
         <Fragment>
+
             { /** user login & links to Settings/FAQs/help email **/ }
             <NavBar />
+
 
             { /** login form **/ }
             <main className={classes.main}>
@@ -93,6 +95,7 @@ function LoginPage(props) {
                     </form>
                 </Paper>
             </main>
+
         </Fragment>
     );
 }
