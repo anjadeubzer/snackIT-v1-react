@@ -1,8 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useState, useContext } from 'react';
+// import Cookies from "js-cookie";
+import formurlencoded from "form-urlencoded";
+import { Redirect } from 'react-router-dom';
 
-import { state } from "../state";
-import { getEl, createEl, isRendered } from "../helpers.js";
-import { sidebar, loginForm, username, password } from "../config";
+// import { state } from "../state";
+// import { getEl, createEl, isRendered } from "../helpers.js";
+// import { sidebar, loginForm, username, password } from "../config";
 
 import PropTypes from 'prop-types';
 
@@ -21,6 +24,7 @@ import Typography from '@material-ui/core/Typography';
 
 // child components
 import NavBar from '../NavBar';
+import { AuthenticationContext } from '../AuthenticationContext';
 
 // styles
 import withStyles from '@material-ui/core/styles/withStyles';
@@ -56,12 +60,72 @@ const styles = theme => ({
     },
 });
 
-function LoginPage(props) {
-    const { classes } = props;
+const LoginPage = ( props ) => {
+
+    // const username = "example-user";
+    // const password = "example-password";
+    const {
+        classes
+    } = props;
+
+    const token = useContext( AuthenticationContext );
+
+    const [ loggedIn, setLoggedIn ] = useState( false );
+    const [ loginError, setLoginError ] = useState( null );
+
+
+    const handleLogin = ( event ) => {
+        event.preventDefault();
+
+        // console.log( event.target.email.value );
+        // console.log( event.target.password.value );
+
+        const username = event.target.email.value;
+        const password = event.target.password.value;
+
+        fetch("https://snackit-v1.ritapbest.io/wp-json/jwt-auth/v1/token", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: formurlencoded({
+                username: username,
+                password: password
+            })
+        })
+            .then( response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw response;
+                }
+            })
+            .then( response => {
+                setLoggedIn( true );
+                token.setWpToken( response.token );
+                token.setWpUser( response.user_display_name );
+                console.log("Logged in");
+            })
+            .catch(error => {
+                console.error( error );
+                // return error.json().then(error => {
+                //     console.error( error );
+                //     setLoginError( error.message );
+                // });
+            });
+    };
+
+
+    // const handleLogout = () => {
+    //     token.setWpToken( null );
+    // };
+
 
     return (
         <Fragment>
-
+            { token.wpToken &&
+            <Redirect to="/snacks" />
+            }
             { /** user login & links to Settings/FAQs/help email **/ }
             <NavBar />
 
@@ -74,7 +138,14 @@ function LoginPage(props) {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">Sign in</Typography>
-                    <form className={classes.form}>
+                    <p>You are currently {loggedIn ? "" : "not"} logged in.</p>
+                    { loginError && (
+                        <p dangerouslySetInnerHTML={{ __html: loginError }} />
+                    )}
+                    <form
+                        className={classes.form}
+                        onSubmit={ handleLogin }
+                    >
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">Email Address</InputLabel>
                             <Input id="email" name="email" autoComplete="email" autoFocus />
@@ -92,7 +163,7 @@ function LoginPage(props) {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            className={classes.submit}
+                            className={ classes.submit }
                         >
                             Sign in
                         </Button>

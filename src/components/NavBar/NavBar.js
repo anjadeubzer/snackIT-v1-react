@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
+import { Redirect } from 'react-router-dom';
 
 // @material-ui components
 import AppBar from '@material-ui/core/AppBar';
@@ -20,6 +21,7 @@ import PropTypes from 'prop-types';
 // helper functions
 import { withStyles } from '@material-ui/core/styles';
 import { withRouter } from 'react-router-dom';
+import { AuthenticationContext } from '../AuthenticationContext';
 
 
 
@@ -41,90 +43,79 @@ const styles = theme => ({
 
 
 
-class NavBar extends Component {
-	state = {
-		auth: true,
-		anchorEl: null,
+const NavBar = ( props ) => {
+	const [ anchorEl, setAnchorEl ] = useState( null );
+	const [ loadSettings, setLoadSettings ] = useState( false );
+
+    const token = useContext( AuthenticationContext );
+
+    const handleMenu = event => {
+        setAnchorEl( event.currentTarget );
 	};
 
-	handleChange = event => {
-		this.setState({ auth: event.target.checked });
+    const handleClose = ( href ) => {
+        setAnchorEl( null );
+        setLoadSettings( true );
+		props.history.push( href );
 	};
 
-	handleMenu = event => {
-		this.setState({ anchorEl: event.currentTarget });
-	};
+	const { classes } = props;
+	const open = Boolean(anchorEl);
 
-	handleClose = ( href ) => {
-		this.setState({ anchorEl: null });
-		this.props.history.push( href );
-	};
+	return (
+		<React.Fragment>
+			{ loadSettings &&
+            	<Redirect to="/profile" />
+            }
+			<AppBar position="static" className={classes.appBar}>
+				<Toolbar>
 
+					<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+						<MenuIcon />
+					</IconButton>
 
-	render() {
-		const { classes } = this.props;
-		const { auth, anchorEl } = this.state;
-		const open = Boolean(anchorEl);
+					<Typography variant="h6" color="inherit" className={classes.grow}>
+						SnackIT App
+					</Typography>
 
-		return (
-			<React.Fragment>
-				<FormGroup>
-					<FormControlLabel
-						control={
-							<Switch checked={auth} onChange={this.handleChange} aria-label="LoginSwitch" />
-						}
-						label={auth ? 'Logout' : 'Login'}
-					/>
-				</FormGroup>
-				<AppBar position="static" className={classes.appBar}>
-					<Toolbar>
+					{ token.wpToken && (
+						<div>
+							<span>{ 'Welcome ' + token.wpUser }</span>
+							<IconButton
+								aria-owns={open ? 'menu-appbar' : undefined}
+								aria-haspopup="true"
+								onClick={ handleMenu }
+								color="inherit"
+							>
+								<AccountCircle />
+							</IconButton>
+							<Menu
+								id="menu-appbar"
+								anchorEl={anchorEl}
+								anchorOrigin={{
+									vertical: 'top',
+									horizontal: 'right',
+								}}
+								transformOrigin={{
+									vertical: 'top',
+									horizontal: 'right',
+								}}
+								open={open}
+								onClose={ handleClose }
+							>
+								<MenuItem onClick={ handleClose }>Profile</MenuItem>
+								<MenuItem onClick={ handleClose }>My account</MenuItem>
+							</Menu>
+						</div>
+					)}
 
-						<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-							<MenuIcon />
-						</IconButton>
+					{/*<Button color="inherit">Login</Button>*/}
 
-						<Typography variant="h6" color="inherit" className={classes.grow}>
-							SnackIT App
-						</Typography>
-
-						{auth && (
-							<div>
-								<IconButton
-									aria-owns={open ? 'menu-appbar' : undefined}
-									aria-haspopup="true"
-									onClick={this.handleMenu}
-									color="inherit"
-								>
-									<AccountCircle />
-								</IconButton>
-								<Menu
-									id="menu-appbar"
-									anchorEl={anchorEl}
-									anchorOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									transformOrigin={{
-										vertical: 'top',
-										horizontal: 'right',
-									}}
-									open={open}
-									onClose={this.handleClose}
-								>
-									<MenuItem onClick={this.handleClose}>Profile</MenuItem>
-									<MenuItem onClick={this.handleClose}>My account</MenuItem>
-								</Menu>
-							</div>
-						)}
-
-						{/*<Button color="inherit">Login</Button>*/}
-
-					</Toolbar>
-				</AppBar>
-			</React.Fragment>
-		)
-	}
-}
+				</Toolbar>
+			</AppBar>
+		</React.Fragment>
+	)
+};
 
 NavBar.propTypes = { classes: PropTypes.object.isRequired };
 

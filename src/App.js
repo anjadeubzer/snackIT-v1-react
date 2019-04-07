@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 // main components
 import Router from './components/Router';
+import { Authentication } from './components/AuthenticationContext';
 
 // styles
 import './App.scss'; //--> The big container for styles
@@ -47,7 +48,9 @@ class App extends Component {
 	render() {
 		return (
 			<MuiThemeProvider theme={theme}>
-				<Router snackGroups={this.props.snackGroups} filteredSnacks={this.props.filteredSnacks} />
+                <Authentication>
+                    <Router snackGroups={this.props.snackGroups} filteredSnacks={this.props.filteredSnacks} />
+                </Authentication>
 			</MuiThemeProvider>
 		);
 	}

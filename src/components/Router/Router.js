@@ -1,12 +1,12 @@
 import React, { Fragment, useContext } from 'react';
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
-import { RootContext } from '../RootContext';
 
 // helper components
 import DocumentTitle from 'react-document-title';
 
 // adding a abstraction layer where I will handle all the REST API fetch processing
 import { Snacks } from '../SnackItContext';
+import { AuthenticationContext } from '../AuthenticationContext';
 
 // child components / pages
 import LoginPage from '../LoginPage';
@@ -16,32 +16,32 @@ import ProfilePage from '../ProfilePage';
 // import NotFound from '../NotFound';
 
 const Router = ({ render, ...routeProps }) => {
-    const  authenticated  = useContext(RootContext);
+    const  authenticated  = useContext( AuthenticationContext );
 
     return (
         <Fragment>
             <DocumentTitle title="SnackIT – your fridge app" />
             <BrowserRouter>
-                <Snacks>
-                    <Switch>
-                        <Route exact path="/" component={ LoginPage } />
-                        <Route
-                            exact
-                            render={() => ( authenticated ? render() : <Redirect to='/' />)}
-                            path="/snacks"
-                            // component={ LoginPage }
-                        />
-                        <Route
-                            exact
-                            render={() => ( authenticated ? render() : <Redirect to='/' />)}
-                            path="/profile"
-                            // component={ ProfilePage }
-                        />
-                        {/*<Route path="/error/:message/" component={ ErrorMessage } />*/}
-                        {/*<Route component={ NotFound } />*/}
+                    <Snacks>
+                        <Switch>
+                            <Route exact path="/" component={ LoginPage } />
+                            <Route
+                                exact
+                                render={() => ( authenticated.wpToken ? <SnacksPage /> : <Redirect to='/' />)}
+                                path="/snacks"
+                                // component={ SnacksPage }
+                            />
+                            <Route
+                                exact
+                                render={() => ( authenticated.wpToken ? <ProfilePage /> : <Redirect to='/' />)}
+                                path="/profile"
+                                // component={ ProfilePage }
+                            />
+                            {/*<Route path="/error/:message/" component={ ErrorMessage } />*/}
+                            {/*<Route component={ NotFound } />*/}
 
-                    </Switch>
-                </Snacks>
+                        </Switch>
+                    </Snacks>
             </BrowserRouter>
         </Fragment>
     );

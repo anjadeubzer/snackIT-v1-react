@@ -281,7 +281,7 @@ DownshiftMultiple.propTypes = {
 
 
 
-function SearchSnacks(props) {
+function SnackSearch(props) {
 	const { classes } = props;
 
 	return (
@@ -293,6 +293,6 @@ function SearchSnacks(props) {
 
 
 
-SearchSnacks.propTypes = { classes: PropTypes.object.isRequired };
+SnackSearch.propTypes = { classes: PropTypes.object.isRequired };
 
-export default withStyles(styles)(SearchSnacks);
+export default withStyles(styles)(SnackSearch);

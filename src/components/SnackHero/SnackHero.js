@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 // child components
-import SearchSnacks from '../SearchSnacks';
+import SearchSnacks from '../SnackSearch';
 import FilterSnacks from '../FilterSnacks';
 
 // helper components
