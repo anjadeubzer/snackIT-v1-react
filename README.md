@@ -7,7 +7,7 @@ It was created for the  **javascriptforwp.com Hackathon 2019**
 
 ## :sparkles: Structure of the the SnackIT App :sparkles:
 
-  1. We use https://snackit.ritapbest.io/ as our **headless wordpress installation**
+  1. We use https://snackit-v1.ritapbest.io/ as our **headless wordpress installation**
 
   2. We have a **plugin** created and installed called 'snack-it' – [snackIT-plugin GIT-REPO](https://github.com/anjadeubzer/snackIT-plugin)
 

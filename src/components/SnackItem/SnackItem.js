@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 // @material-ui components
 import Card from '@material-ui/core/Card';
@@ -12,6 +12,7 @@ import CartIcon from '@material-ui/icons/AddShoppingCart';
 
 // helper components
 import PropTypes from 'prop-types';
+import { AuthenticationContext } from '../AuthenticationContext';
 
 //helper functions
 import { formatPrice } from '../HelperFunctions/formatPrice';
@@ -54,13 +55,16 @@ const styles = theme => ({
 });
 
 const SnackItem = ( props ) => {
+    const  token  = useContext( AuthenticationContext );
+    console.log( token.wpToken );
 
     const {
         snack: { snack_price, snack_size, snack_brand, imageUrl, title, id },
         classes
     } = props;
 
-    let fetchURL = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/snack_purchase?title=" + title + "&status=publish";
+    let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+    let fetchURL = restApiUrl + "snack_purchase?title=" + title + "&status=publish";
 
     const createPost = () => {
         fetch(
@@ -69,7 +73,7 @@ const SnackItem = ( props ) => {
                 method: "POST",
                 headers: {
                     Authorization:
-                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc25hY2tpdC12MS5yaXRhcGJlc3QuaW8iLCJpYXQiOjE1NTQ3NTM2MDAsIm5iZiI6MTU1NDc1MzYwMCwiZXhwIjoxNTU1MzU4NDAwLCJkYXRhIjp7InVzZXIiOnsiaWQiOiIyIn19fQ.ZjTRdATZ28AfcR63XzHYVjoATSQUu_7zQJASa3yYQ90"
+                        "Bearer " + token.wpToken
                 }
             }
         )

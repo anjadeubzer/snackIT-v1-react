@@ -5,9 +5,10 @@
  * while we type into SnackSearch field
  *
  * **/
-const filterSnacks = ( snacks ) => {
+export const filterSnacks = ( snacks, inputValue ) => {
+    // const snacks = useContext(SnackItContext);
     let wpSnacksFiltered = snacks.wpSnacks;
-    let filterTerm = snacks.searchString;
+    let filterTerm = inputValue;
 
     function escapeRegExp(s) {
         return s.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");

@@ -24,11 +24,9 @@ const Snacks = ( props ) => {
     const [ searchArray, setSearchArray ] = useState( [] );
 
     useEffect( () => {
-        // let dataURL = "http://hackathon.local/wp-json/wp/v2/";
-        let dataURL = "https://snackit.ritapbest.io/wp-json/wp/v2/";
-        // let dataURL = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+        let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
 
-        window.fetch(dataURL + 'snack?_embed=1&per_page=100')
+        window.fetch(restApiUrl + 'snack?_embed=1&per_page=100')
             .then( ( res ) => {
                 if ( res.ok ) {
                     return res.json();

@@ -67,13 +67,11 @@ const LoginPage = ( props ) => {
     const handleLogin = ( event ) => {
         event.preventDefault();
 
-        // console.log( event.target.email.value );
-        // console.log( event.target.password.value );
-
         const username = event.target.email.value;
         const password = event.target.password.value;
+        let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/jwt-auth/v1/token";
 
-        fetch("https://snackit-v1.ritapbest.io/wp-json/jwt-auth/v1/token", {
+        fetch( restApiUrl, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
