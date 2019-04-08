@@ -15,6 +15,8 @@ import ProfilePage from '../ProfilePage';
 // import ErrorMessage from '../ErrorMessage';
 // import NotFound from '../NotFound';
 
+
+
 const Router = ({ render, ...routeProps }) => {
     const  authenticated  = useContext( AuthenticationContext );
 
@@ -28,14 +30,12 @@ const Router = ({ render, ...routeProps }) => {
                             <Route
                                 exact
                                 render={() => ( authenticated.wpToken ? <SnacksPage /> : <Redirect to='/' />)}
-                                path="/snacks"
-                                // component={ SnacksPage }
+                                path="/SnacksPage"
                             />
                             <Route
                                 exact
                                 render={() => ( authenticated.wpToken ? <ProfilePage /> : <Redirect to='/' />)}
-                                path="/profile"
-                                // component={ ProfilePage }
+                                path="/profilePage"
                             />
                             {/*<Route path="/error/:message/" component={ ErrorMessage } />*/}
                             {/*<Route component={ NotFound } />*/}

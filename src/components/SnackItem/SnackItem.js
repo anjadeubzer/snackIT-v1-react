@@ -60,9 +60,35 @@ const SnackItem = ( props ) => {
         classes
     } = props;
 
+    let fetchURL = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/snack_purchase?title=" + title + "&status=publish";
+
+    const createPost = () => {
+        fetch(
+          fetchURL,
+            {
+                method: "POST",
+                headers: {
+                    Authorization:
+                        "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvc25hY2tpdC12MS5yaXRhcGJlc3QuaW8iLCJpYXQiOjE1NTQ3NTM2MDAsIm5iZiI6MTU1NDc1MzYwMCwiZXhwIjoxNTU1MzU4NDAwLCJkYXRhIjp7InVzZXIiOnsiaWQiOiIyIn19fQ.ZjTRdATZ28AfcR63XzHYVjoATSQUu_7zQJASa3yYQ90"
+                }
+            }
+        )
+            .then(response => {
+                if (response.ok) {
+                    console.log(response);
+                } else {
+                    throw response;
+                }
+            })
+            .catch(error => console.error(error));
+    };
+
     return (
         <Card className={ 'snack-item snack-item-' + id }>
-            <CardActionArea className={ classes.cardAction } >
+            <CardActionArea
+                className={ classes.cardAction }
+                onClick={ createPost }
+            >
 
                 <CardMedia
                     className={ classes.cardMedia }

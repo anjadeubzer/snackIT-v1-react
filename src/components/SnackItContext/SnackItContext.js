@@ -14,9 +14,14 @@ import { Redirect } from 'react-router-dom';
  *
  */
 const SnackItContext = React.createContext();
+
 const Snacks = ( props ) => {
-    const [ snacks, setSnacks ] = useState( [] );
+
     const [ error, setError ] = useState( false );
+    const [ wpSnacks, setWpSnacks ] = useState( [] );
+    const [ filteredSnacks, setFilteredSnacks ] = useState( [] );
+    const [ searchString, setSearchString ] = useState( '' );
+    const [ searchArray, setSearchArray ] = useState( [] );
 
     useEffect( () => {
         // let dataURL = "http://hackathon.local/wp-json/wp/v2/";
@@ -57,13 +62,25 @@ const Snacks = ( props ) => {
                         }
                     );
                 } );
-                setSnacks( snackData );
+                setWpSnacks( snackData );
+                setFilteredSnacks( snackData );
                 localStorage.setItem( 'snackData', JSON.stringify( snackData ) );
             } )
             .catch( ( fetchError ) => {
                 setError( fetchError );
             } );
     }, [] );
+
+    const snacks = {
+        wpSnacks: wpSnacks,                     // the snacks that we fetched from WP REST API
+        setWpSnacks: setWpSnacks,               // the setState for prop above
+        filteredSnacks: filteredSnacks,         // the snack that are filtered through SnackSearch or SnackGrous
+        setFilteredSnacks: setFilteredSnacks,   // the setState for prop above
+        searchString: searchString,             // the Search String of SnackSearch
+        setSearchString: setSearchString,       // the setState for prop above
+        searchArray: searchArray,               // the Search String of SnackSearch
+        setSearchArray: setSearchArray,         // the setState for prop above
+    };
 
     return (
         <Fragment>

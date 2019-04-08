@@ -6,10 +6,8 @@ import { Authentication } from './components/AuthenticationContext';
 
 // styles
 import './App.scss'; //--> The big container for styles
-
 import 'typeface-roboto';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles/index';
-
 const theme = createMuiTheme({
     palette: {
         // type: 'dark',
@@ -33,23 +31,13 @@ const theme = createMuiTheme({
 
 
 
-
 class App extends Component {
-
-    state = {
-        snacks: [],
-        snackGroups: [],
-        filteredSnacks: [],
-
-        searchArray: [],
-        searchString: "",
-    };
 
 	render() {
 		return (
 			<MuiThemeProvider theme={theme}>
                 <Authentication>
-                    <Router snackGroups={this.props.snackGroups} filteredSnacks={this.props.filteredSnacks} />
+                    <Router />
                 </Authentication>
 			</MuiThemeProvider>
 		);

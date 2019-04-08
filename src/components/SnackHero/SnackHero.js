@@ -123,7 +123,7 @@ class SnackHero extends Component {
 					value === 1 &&
 					<FilterSnacks
 						className={classes.tabbedContent}
-						filterSearch={this.filterSearch}
+						// filterSearch={this.filterSearch}
 						snackGroups={ this.props.snackGroups }
 					/> }
 				{ // the third tab shows the latest purchases

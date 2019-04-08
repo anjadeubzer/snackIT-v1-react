@@ -1,19 +1,16 @@
 import React, { useContext } from 'react';
+import PropTypes from 'prop-types';
 
 // @material-ui components
 import Grid from '@material-ui/core/Grid';
-
-// helper components
-import PropTypes from 'prop-types';
 
 // child components
 import { SnackItContext } from '../SnackItContext';
 import SnackItem from '../SnackItem/SnackItem';
 
-// helper functions
-// import 'SnackList.scss';
+// styles
+import './SnackList.scss';
 import { withStyles } from '@material-ui/core/styles';
-
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
@@ -28,10 +25,16 @@ const styles = theme => ({
 
 
 
-const SnackList = ( { classes } ) => {
 
-	const availableSnacks = useContext( SnackItContext );
-	console.log(availableSnacks);
+/**
+ * const SnackList
+ *
+ * displays the list of available snack
+ *
+ * **/
+const SnackList = ( { classes } ) => {
+    const snacks = useContext( SnackItContext );
+    let availableSnacks = snacks.filteredSnacks;
 
 	// render our contentWrapper
 	return(

@@ -1,12 +1,7 @@
-import React, { Fragment, useEffect, useState, useContext } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 // import Cookies from "js-cookie";
 import formurlencoded from "form-urlencoded";
 import { Redirect } from 'react-router-dom';
-
-// import { state } from "../state";
-// import { getEl, createEl, isRendered } from "../helpers.js";
-// import { sidebar, loginForm, username, password } from "../config";
-
 import PropTypes from 'prop-types';
 
 // @material-ui components
@@ -61,12 +56,7 @@ const styles = theme => ({
 });
 
 const LoginPage = ( props ) => {
-
-    // const username = "example-user";
-    // const password = "example-password";
-    const {
-        classes
-    } = props;
+    const { classes } = props;
 
     const token = useContext( AuthenticationContext );
 
@@ -123,9 +113,11 @@ const LoginPage = ( props ) => {
 
     return (
         <Fragment>
+            { /** when Login was successfull we will redirect to the SnackPage **/ }
             { token.wpToken &&
-            <Redirect to="/snacks" />
+            <Redirect to="/snacksPage" />
             }
+
             { /** user login & links to Settings/FAQs/help email **/ }
             <NavBar />
 

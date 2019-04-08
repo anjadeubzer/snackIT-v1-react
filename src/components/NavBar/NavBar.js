@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 // @material-ui components
 import AppBar from '@material-ui/core/AppBar';
@@ -7,24 +8,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Switch from '@material-ui/core/Switch';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-// helper components
-import PropTypes from 'prop-types';
-
-// helper functions
-import { withStyles } from '@material-ui/core/styles';
-import { withRouter } from 'react-router-dom';
+// child components
 import { AuthenticationContext } from '../AuthenticationContext';
 
-
-
+// styles
+import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	root: {
 		flexGrow: 1,
@@ -65,7 +57,7 @@ const NavBar = ( props ) => {
 	return (
 		<React.Fragment>
 			{ loadSettings &&
-            	<Redirect to="/profile" />
+            	<Redirect to="/profilePage" />
             }
 			<AppBar position="static" className={classes.appBar}>
 				<Toolbar>
