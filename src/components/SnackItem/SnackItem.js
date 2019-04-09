@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { Fragment, useContext, useState, useEffect } from 'react';
 
 // @material-ui components
 import Card from '@material-ui/core/Card';
@@ -10,6 +10,14 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
+import SnackPurchaseSnackbar from '../SnackPurchaseSnackbar';
+
+
 // helper components
 import PropTypes from 'prop-types';
 import { AuthenticationContext } from '../AuthenticationContext';
@@ -19,6 +27,7 @@ import { formatPrice } from '../HelperFunctions/formatPrice';
 
 //@material-ui styles
 import { withStyles } from '@material-ui/core/styles';
+import {filterSnacks} from "../HelperFunctions/filterSnacks";
 const styles = theme => ({
 
     cardAction: {
@@ -52,28 +61,40 @@ const styles = theme => ({
         color: theme.palette.primary.contrastText,
         backgroundColor: theme.palette.primary.main,
     },
+    close: {
+        padding: theme.spacing.unit / 2,
+    },
 });
 
 const SnackItem = ( props ) => {
-    const  token  = useContext( AuthenticationContext );
-    console.log( token.wpToken );
 
+    const [ open, setOpen ] = useState( false );
+    const [ purchaseCanceled, setPurchaseCanceled ] = useState( false );
     const {
-        snack: { snack_price, snack_size, snack_brand, imageUrl, title, id },
-        classes
-    } = props;
+              snack: {
+                         snack_price,
+                         snack_size,
+                         snack_brand,
+                         imageUrl,
+                         title,
+                         id
+                     },
+              classes
+          } = props;
 
-    let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
-    let fetchURL = restApiUrl + "snack_purchase?title=" + title + "&status=publish";
+    const token  = useContext( AuthenticationContext );
+    const restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+    let   fetchURL = restApiUrl + "snackpurchase?title=" + title + "&status=publish";
+    const purchaseMessage = "product " + title + " purchased";
 
-    const createPost = () => {
+    const createPost = ( event ) => {
         fetch(
-          fetchURL,
+            fetchURL,
             {
                 method: "POST",
                 headers: {
                     Authorization:
-                        "Bearer " + token.wpToken
+                    "Bearer " + token.wpToken
                 }
             }
         )
@@ -86,48 +107,115 @@ const SnackItem = ( props ) => {
             })
             .catch(error => console.error(error));
     };
+    const purchaseCountdown = ( event ) => {
+        event.preventDefault();
+
+        // after 7 sec -> send purchase
+        setTimeout(() => {
+            if( purchaseCanceled == false ) {
+                console.log( 'Purchase sent!');
+                console.log( purchaseCanceled );
+                createPost();
+            } else {
+                console.log( 'Purchase canceled!');
+                console.log( purchaseCanceled );
+            }
+        }, 7500);
+
+        // open snackbox ->
+        setOpen( true );
+    };
+
+    const cancelPurchase = ( event ) => {
+        event.preventDefault();
+        setPurchaseCanceled( true );
+        // setOpen( false );
+        console.log( 'cancel Button clicked! ');
+        console.log( purchaseCanceled );
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') { return; }
+        setOpen( false );
+    };
+
+    useEffect(
+        () => {
+            console.log( 'Purchase canceled!');
+            console.log( purchaseCanceled );
+        },
+        [ purchaseCanceled ]
+    );
 
     return (
-        <Card className={ 'snack-item snack-item-' + id }>
-            <CardActionArea
-                className={ classes.cardAction }
-                onClick={ createPost }
-            >
+        <Fragment>
+            <Card className={ 'snack-item snack-item-' + id }>
+                <CardActionArea
+                    className={ classes.cardAction }
+                    onClick={ purchaseCountdown }
+                >
 
-                <CardMedia
-                    className={ classes.cardMedia }
-                    image={ imageUrl }
-                    title={ title }
-                />
+                    <CardMedia
+                        className={ classes.cardMedia }
+                        image={ imageUrl }
+                        title={ title }
+                    />
 
-                <CardContent className={ classes.cardContent } >
-                    <Typography component="h3" variant="h5" >
-                        { title }
-                    </Typography>
-
-                    <Typography variant="subtitle1" gutterBottom >
-                        { snack_brand }
-                    </Typography>
-
-                    <Typography variant="body1">
-                        { snack_size }
-                        {/*{Object.keys( props.snack._embedded["wp:term"][0] ).map( key => ( <a key={ key } index={ key } href={'#' + props.snack._embedded["wp:term"][1][key].name} >{props.snack._embedded["wp:term"][1][key].name}</a> ))}*/}
-                    </Typography>
-                </CardContent>
-
-                <CardActions className={ classes.cardActions } >
-                    <div>
-                        <CartIcon fontSize="large" />
-                    </div>
-                    <div>
-                        <Typography variant="subtitle1">
-                            { formatPrice( snack_price ) }
+                    <CardContent className={ classes.cardContent } >
+                        <Typography component="h3" variant="h5" >
+                            { title }
                         </Typography>
-                    </div>
-                </CardActions>
 
-            </CardActionArea>
-        </Card>
+                        <Typography variant="subtitle1" gutterBottom >
+                            { snack_brand }
+                        </Typography>
+
+                        <Typography variant="body1">
+                            { snack_size }
+                            {/*{Object.keys( props.snack._embedded["wp:term"][0] ).map( key => ( <a key={ key } index={ key } href={'#' + props.snack._embedded["wp:term"][1][key].name} >{props.snack._embedded["wp:term"][1][key].name}</a> ))}*/}
+                        </Typography>
+                    </CardContent>
+
+                    <CardActions className={ classes.cardActions } >
+                        <div>
+                            <CartIcon fontSize="large" />
+                        </div>
+                        <div>
+                            <Typography variant="subtitle1">
+                                { formatPrice( snack_price ) }
+                            </Typography>
+                        </div>
+                    </CardActions>
+
+                </CardActionArea>
+            </Card>
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                open={ open }
+                autoHideDuration={ 7000 }
+                onClose={ handleSnackbarClose }
+                ContentProps={{ 'aria-describedby': 'purchaseMessage', }}
+                message={ purchaseMessage }
+                action={[
+                    <Button key="undo" color="secondary" size="small" onClick={ cancelPurchase }>
+                        UNDO
+                    </Button>,
+                    <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        className={ classes.close }
+                        onClick={ handleSnackbarClose }
+                    >
+                        <CloseIcon />
+                    </IconButton>,
+                ]}
+            />
+        </Fragment>
+
     );
 };
 SnackItem.propTypes = { classes: PropTypes.object.isRequired };

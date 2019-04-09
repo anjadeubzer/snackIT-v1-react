@@ -77,7 +77,6 @@ function renderInput(inputProps) {
  *
  * **/
 const SnackSearch = ( props ) => {
-    const [ searchArray, setSearchArray ] = useState( [] );
     const [ inputValue, setInputValue ] = useState( '' );
     const {classes} = props;
 
@@ -98,7 +97,6 @@ const SnackSearch = ( props ) => {
         <div className={classes.root}>
             <div className={classes.container}>
                  <TextField
-                     autoComplete
                      id="standard-search"
                      fullWidth
                      label="Search"
