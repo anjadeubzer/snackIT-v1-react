@@ -31,7 +31,7 @@ const styles = theme => ({
 
 const SnacksTags = ( { classes } ) => {
 	const [ filterValue, setFilterValue ] = useState( '' );
-	const [ iconDisplay, setIconDisplay ] = useState( 'none' );
+	const [ iconDisplay, setIconDisplay ] = useState( '' );
 	const snacks = useContext( SnackItContext );
 	let snackGroups = snacks.wpSnackGroups;
 
@@ -43,7 +43,7 @@ const SnacksTags = ( { classes } ) => {
 	);
 
 	const handleClick = label => {
-		setIconDisplay( '<DoneIcon />' );
+		setIconDisplay( label );
 		setFilterValue( label );
 		console.log( label );
 	};
@@ -65,7 +65,7 @@ const SnacksTags = ( { classes } ) => {
 							index={ key }
 							label={ snackGroups[key].name }
 							onClick={ () => handleClick(snackGroups[key].name) }
-							icon={ iconDisplay }
+							icon={ (iconDisplay == snackGroups[key].name) ? <DoneIcon /> : 'none' }
 							className={ classes.chip }
 						/>
 					))}
