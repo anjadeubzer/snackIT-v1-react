@@ -18,12 +18,14 @@ const styles = theme => ({
 	filterSnackGroups: {
 		flexGrow: 1,
 		minHeight: 80,
-		padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 3}px`,
+		padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
 		backgroundColor: theme.palette.primary.light,
 		marginBottom: theme.spacing.unit * 4,
 	},
 	chip: {
+		fontSize: 16,
 		marginRight: theme.spacing.unit,
+		marginBottom: theme.spacing.unit,
 	}
 });
 
@@ -47,10 +49,6 @@ const SnacksTags = ( { classes } ) => {
 		setFilterValue( label );
 		console.log( label );
 	};
-	const handleDelete = label => {
-		setFilterValue( label );
-		console.log( label );
-	};
 
 	// render our searchField
 	return (
@@ -60,13 +58,13 @@ const SnacksTags = ( { classes } ) => {
 				<div>
 					{ Object.keys( snackGroups ).map( key => (
 						<Chip
+							className={ classes.chip }
 							color="primary"
 							key={ key }
 							index={ key }
 							label={ snackGroups[key].name }
 							onClick={ () => handleClick(snackGroups[key].name) }
 							icon={ (iconDisplay == snackGroups[key].name) ? <DoneIcon /> : 'none' }
-							className={ classes.chip }
 						/>
 					))}
 				</div>
