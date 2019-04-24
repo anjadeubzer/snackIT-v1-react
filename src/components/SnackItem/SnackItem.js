@@ -73,6 +73,7 @@ const SnackItem = ( props ) => {
                          snack_price,
                          snack_size,
                          snack_brand,
+                         snack_group,
                          imageUrl,
                          title,
                          id
@@ -183,7 +184,7 @@ const SnackItem = ( props ) => {
                         </Typography>
 
                         <Typography variant="body1">
-                            { snack_size }
+                            { snack_size } – { snack_group }
                             {/*{Object.keys( props.snack._embedded["wp:term"][0] ).map( key => ( <a key={ key } index={ key } href={'#' + props.snack._embedded["wp:term"][1][key].name} >{props.snack._embedded["wp:term"][1][key].name}</a> ))}*/}
                         </Typography>
                     </CardContent>

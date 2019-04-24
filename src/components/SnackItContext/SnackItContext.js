@@ -42,10 +42,14 @@ const Snacks = ( props ) => {
 				const snackData = res.map( ( snack ) => {
 
 					// If images are not set revert to default image
+					let snackGroup = '';
 					let defaultImageUrl = "https://placeimg.com/300/300/animals/" + snack.id;
 					if ( snack._embedded[ 'wp:featuredmedia' ] ) {
 						defaultImageUrl = snack._embedded[ 'wp:featuredmedia' ][ 0 ].media_details.sizes.thumbnail.source_url;
 					}
+					// if ( snack._embedded[ 'wp:term' ] ) {
+					// 	snackGroup = snack._embedded[ 'wp:term' ][ 0 ][ 0 ].name;
+					// }
 
 					return Object.assign(
 						{},
@@ -59,6 +63,7 @@ const Snacks = ( props ) => {
 							snack_price: snack.meta.snack_price,
 							snack_brand: ( snack.meta.snack_brand ? snack.meta.snack_brand : '-' ),
 							imageUrl:    defaultImageUrl,
+							snack_group: ( snack._embedded[ 'wp:term' ][ 0 ][ 0 ] ? snack._embedded[ 'wp:term' ][ 0 ][ 0 ].name : 'no_group' ),
 						}
 					);
 				} );

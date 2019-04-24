@@ -42,6 +42,7 @@ export const filterSnacks = ( snacks, inputValue ) => {
 
         if (
             searchRegex.test(snack.title) === true
+            || searchRegex.test(snack.snack_group) === true
             || searchRegex.test(snack.snack_brand) === true
             || searchRegex.test(snack.snack_price) === true
             || searchRegex.test(snack.snack_size) === true
