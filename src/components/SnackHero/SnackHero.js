@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 
 // child components
-import SearchSnacks from '../SnackSearch';
-import FilterSnacks from '../FilterSnacks';
+import SnackSearch from '../SnackSearch';
+import SnacksTags from '../SnacksTags';
+import SnacksFavorites from '../SnacksFavorites';
 
 // helper components
 import PropTypes from 'prop-types';
@@ -27,8 +28,8 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = theme => ({
 	heroSection: {
 		margin: '0 -20',
-		// backgroundColor: theme.palette.background.paper,
 	},
+
 	heroContent: {
 		margin: '0 auto',
 		padding: `${theme.spacing.unit * 8}px 0 0 ${theme.spacing.unit * 11}px`,
@@ -38,6 +39,7 @@ const styles = theme => ({
 		backgroundRepeat: 'no-repeat',
 		backgroundPosition: '0% 50%',
 	},
+
 	heroHeadline: {
 		fontSize: '8vw',
 		fontWeight: '500',
@@ -49,14 +51,15 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit * 6,
 		backgroundColor: theme.palette.secondary.light,
 	},
+
 	tabbedContent: {
-		// color: theme.palette.primary.contrastText,
 		flexGrow: 1,
 		minHeight: 80,
 		padding: `${theme.spacing.unit * 5}px ${theme.spacing.unit * 3}px 0 ${theme.spacing.unit * 3}px`,
 		backgroundColor: theme.palette.primary.light,
 		marginBottom: theme.spacing.unit * 4,
 	},
+
 });
 
 
@@ -104,31 +107,35 @@ class SnackHero extends Component {
 
 
 					{/** -- quick filter possibilities
-					 * todo: create two(three) ways of filtering
-					 * It is possible to choose one! no combination for the sake of simplicity (KISS)
-					 * 1) tag filtering by showing snackGroups and tags ( search by touch/click )
-					 * 2) search input ( search by typing )
-					 * 3) favorites - latest checkout products sorted by times of consumption **/}
+					 * we create three ways of quickly choosing the product
+					 * It is possible to choose one!
+					 * no combination for the sake of simplicity (KISS)
+					 *
+					 * 1.Tab -- search field ( search by typing )
+					 * 2.Tab -- tag filtering by showing snackGroups and tags ( search by touch/click )
+					 * 3.TAB -- search by favorites - latest bought products sorted by times of purchase **/}
 
 				</div>
 
-				{ // the first tab shows the search by typing the name of the product
+				{ /** 1.Tab */
 					value === 0 &&
-					<SearchSnacks
+					<SnackSearch
 						className={classes.tabbedContent}
 						typeSearch={ this.props.typeSearch }
 					/>
 				}
-				{ // the second tab shows the search by clicking the category or tag name
+
+				{ /** 2.Tab */
 					value === 1 &&
-					<FilterSnacks
+					<SnacksTags
 						className={classes.tabbedContent}
-						// filterSearch={this.filterSearch}
-						snackGroups={ this.props.snackGroups }
-					/> }
-				{ // the third tab shows the latest purchases
+						snackGroups={ this.props.snackGroups } />
+				}
+
+				{ /** 3.Tab */
 					value === 2 &&
-					<div className={classes.tabbedContent}>My latest Purchases</div>
+					<SnacksFavorites
+						className={classes.tabbedContent} />
 				}
 
 			</section>

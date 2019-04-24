@@ -17,79 +17,113 @@ const SnackItContext = React.createContext();
 
 const Snacks = ( props ) => {
 
-    const [ error, setError ] = useState( false );
-    const [ wpSnacks, setWpSnacks ] = useState( [] );
-    const [ filteredSnacks, setFilteredSnacks ] = useState( [] );
-    const [ searchString, setSearchString ] = useState( '' );
-    const [ searchArray, setSearchArray ] = useState( [] );
+	const [ error, setError ] = useState( false );
+	const [ wpSnacks, setWpSnacks ] = useState( [] );
+	const [ wpSnackGroups, setWpSnackGroups ] = useState( [] );
+	const [ filteredSnacks, setFilteredSnacks ] = useState( [] );
+	const [ searchString, setSearchString ] = useState( '' );
+	const [ searchArray, setSearchArray ] = useState( [] );
 
-    useEffect( () => {
-        let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+	useEffect( () => {
+		let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
 
-        window.fetch(restApiUrl + 'snack?_embed=1&per_page=100')
-            .then( ( res ) => {
-                if ( res.ok ) {
-                    return res.json();
-                }
-                throw res.error;
-            })
-            .then( ( res ) => {
+		// first get the Snacks
+		window.fetch( restApiUrl + 'snack?_embed=1&per_page=100' )
+			.then( ( res ) => {
+				if ( res.ok ) {
+					return res.json();
+				}
+				throw res.error;
+			} )
+			.then( ( res ) => {
 
-                // Map over the data and only use the props you need -
-                // thank you @fabian for pointing us to this direction
-                const snackData = res.map( ( snack ) => {
+				// Map over the data and only use the props you need -
+				// thank you @fabiankaegy for pointing us to this direction
+				const snackData = res.map( ( snack ) => {
 
-                    // If images are not set revert to default image
-                    let defaultImageUrl = "https://placeimg.com/300/300/animals/" + snack.id;
-                    if( snack._embedded['wp:featuredmedia'] ){
-                        defaultImageUrl = snack._embedded[ 'wp:featuredmedia' ][ 0 ].media_details.sizes.thumbnail.source_url;
-                    }
+					// If images are not set revert to default image
+					let defaultImageUrl = "https://placeimg.com/300/300/animals/" + snack.id;
+					if ( snack._embedded[ 'wp:featuredmedia' ] ) {
+						defaultImageUrl = snack._embedded[ 'wp:featuredmedia' ][ 0 ].media_details.sizes.thumbnail.source_url;
+					}
 
-                    return Object.assign(
-                        {},
-                        {
-                            id: snack.id,
-                            title: snack.title.rendered,
-                            slug: snack.slug,
-                            content: snack.content.rendered,
-                            description: snack.meta.snack_description,
-                            snack_size: snack.meta.snack_size,
-                            snack_price: snack.meta.snack_price,
-                            snack_brand: (snack.meta.snack_brand ? snack.meta.snack_brand : '-' ),
-                            imageUrl: defaultImageUrl,
-                        }
-                    );
-                } );
-                setWpSnacks( snackData );
-                setFilteredSnacks( snackData );
-                localStorage.setItem( 'snackData', JSON.stringify( snackData ) );
-            } )
-            .catch( ( fetchError ) => {
-                setError( fetchError );
-            } );
-    }, [] );
+					return Object.assign(
+						{},
+						{
+							id:          snack.id,
+							title:       snack.title.rendered,
+							slug:        snack.slug,
+							content:     snack.content.rendered,
+							description: snack.meta.snack_description,
+							snack_size:  snack.meta.snack_size,
+							snack_price: snack.meta.snack_price,
+							snack_brand: ( snack.meta.snack_brand ? snack.meta.snack_brand : '-' ),
+							imageUrl:    defaultImageUrl,
+						}
+					);
+				} );
+				setWpSnacks( snackData );
+				setFilteredSnacks( snackData );
+				localStorage.setItem( 'snackData', JSON.stringify( snackData ) );
+			} )
+			.catch( ( fetchError ) => {
+				setError( fetchError );
+			} );
 
-    const snacks = {
-        wpSnacks: wpSnacks,                     // the snacks that we fetched from WP REST API
-        setWpSnacks: setWpSnacks,               // the setState for prop above
-        filteredSnacks: filteredSnacks,         // the snack that are filtered through SnackSearch or SnackGrous
-        setFilteredSnacks: setFilteredSnacks,   // the setState for prop above
-        searchString: searchString,             // the Search String of SnackSearch
-        setSearchString: setSearchString,       // the setState for prop above
-        searchArray: searchArray,               // the Search String of SnackSearch
-        setSearchArray: setSearchArray,         // the setState for prop above
-    };
+		// then get the snack_groups
+		window.fetch( restApiUrl + 'snack_groups?per_page=100' )
+			.then( ( res ) => {
+				if ( res.ok ) {
+					return res.json();
+				}
+				throw res.error;
+			} )
+			.then( ( res ) => {
 
-    return (
-        <Fragment>
+				// Map over the data - we only need the name, slug and id
+				const snackGroups = res.map( ( snackgroup ) => {
+					return Object.assign(
+						{},
+						{
+							id:          snackgroup.id,
+							name:        snackgroup.name,
+							slug:        snackgroup.slug,
+							description: snackgroup.meta.snack_description,
+						}
+					);
+				} );
+				setWpSnackGroups( snackGroups );
+				localStorage.setItem( 'snackGroups', JSON.stringify( snackGroups ) );
+			} )
+			.catch( ( fetchError ) => {
+				setError( fetchError );
+			} );
+
+	}, [] );
+
+	const snacks = {
+		wpSnacks:          wpSnacks,                     // the snacks that we fetched from WP REST API
+		setWpSnacks:       setWpSnacks,               // the setState for prop above
+		wpSnackGroups:     wpSnackGroups,           // the snack_groups that we fetched from WP REST API
+		setWpSnackGroups:  setWpSnackGroups,     // the setState for prop above
+		filteredSnacks:    filteredSnacks,         // the snack that are filtered through SnackSearch or SnackGrous
+		setFilteredSnacks: setFilteredSnacks,   // the setState for prop above
+		searchString:      searchString,             // the Search String of SnackSearch
+		setSearchString:   setSearchString,       // the setState for prop above
+		searchArray:       searchArray,               // the Search String of SnackSearch
+		setSearchArray:    setSearchArray,         // the setState for prop above
+	};
+
+	return (
+		<Fragment>
             { error &&
             <Redirect to={ `/error/${ error }` } />
             }
-            <SnackItContext.Provider value={ snacks }>
+			<SnackItContext.Provider value={ snacks }>
                 { props.children }
             </SnackItContext.Provider>
         </Fragment>
-    );
+	);
 
 };
 

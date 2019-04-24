@@ -30,7 +30,7 @@ const Router = ({ render, ...routeProps }) => {
                             <Route
                                 exact
                                 render={() => ( authenticated.wpToken ? <SnacksPage /> : <Redirect to='/' />)}
-                                path="/SnacksPage"
+                                path="/snacksPage"
                             />
                             <Route
                                 exact

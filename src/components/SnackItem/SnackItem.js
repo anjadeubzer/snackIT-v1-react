@@ -15,7 +15,6 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-import SnackPurchaseSnackbar from '../SnackPurchaseSnackbar';
 
 
 // helper components
@@ -27,7 +26,6 @@ import { formatPrice } from '../HelperFunctions/formatPrice';
 
 //@material-ui styles
 import { withStyles } from '@material-ui/core/styles';
-import {filterSnacks} from "../HelperFunctions/filterSnacks";
 const styles = theme => ({
 
     cardAction: {
@@ -82,9 +80,22 @@ const SnackItem = ( props ) => {
               classes
           } = props;
 
+    useEffect(
+        () => {
+            console.log( 'Purchase variable set!!');
+            console.log( purchaseCanceled );
+        },
+        [ purchaseCanceled ]
+    );
+
     const token  = useContext( AuthenticationContext );
+
     const restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
-    let   fetchURL = restApiUrl + "snackpurchase?title=" + title + "&status=publish";
+    const restApiPostType = "snackpurchase";
+    let   restApiPrice = snack_price;
+
+    let   fetchURL = restApiUrl + restApiPostType + "?title=" + title + "&meta[snack_id]=" + id + "&meta[purchase_price]=" + restApiPrice + "&status=publish";
+
     const purchaseMessage = "product " + title + " purchased";
 
     const createPost = ( event ) => {
@@ -92,6 +103,14 @@ const SnackItem = ( props ) => {
             fetchURL,
             {
                 method: "POST",
+                // data: {
+                //     title: fetchTitle,
+                //     status: 'publish',
+                //     meta: {
+                //         'snack_id' : fetchID,
+                //         'purchase_price' : fetchPrice,
+                //     },
+                // },
                 headers: {
                     Authorization:
                     "Bearer " + token.wpToken
@@ -107,12 +126,13 @@ const SnackItem = ( props ) => {
             })
             .catch(error => console.error(error));
     };
+
     const purchaseCountdown = ( event ) => {
         event.preventDefault();
 
-        // after 7 sec -> send purchase
+        // after 5 sec -> send purchase
         setTimeout(() => {
-            if( purchaseCanceled == false ) {
+            if( purchaseCanceled === false ) {
                 console.log( 'Purchase sent!');
                 console.log( purchaseCanceled );
                 createPost();
@@ -120,7 +140,7 @@ const SnackItem = ( props ) => {
                 console.log( 'Purchase canceled!');
                 console.log( purchaseCanceled );
             }
-        }, 7500);
+        }, 5500);
 
         // open snackbox ->
         setOpen( true );
@@ -138,14 +158,6 @@ const SnackItem = ( props ) => {
         if (reason === 'clickaway') { return; }
         setOpen( false );
     };
-
-    useEffect(
-        () => {
-            console.log( 'Purchase canceled!');
-            console.log( purchaseCanceled );
-        },
-        [ purchaseCanceled ]
-    );
 
     return (
         <Fragment>
@@ -195,7 +207,7 @@ const SnackItem = ( props ) => {
                     horizontal: 'left',
                 }}
                 open={ open }
-                autoHideDuration={ 7000 }
+                autoHideDuration={ 5000 }
                 onClose={ handleSnackbarClose }
                 ContentProps={{ 'aria-describedby': 'purchaseMessage', }}
                 message={ purchaseMessage }
@@ -215,9 +227,14 @@ const SnackItem = ( props ) => {
                 ]}
             />
         </Fragment>
-
     );
 };
-SnackItem.propTypes = { classes: PropTypes.object.isRequired };
+
+SnackItem.propTypes = {
+    classes: PropTypes.object.isRequired,
+    // enqueueSnackbar: PropTypes.func.isRequired,
+};
+
 
 export default withStyles(styles)(SnackItem);
+

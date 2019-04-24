@@ -30,13 +30,6 @@ import NavBar from '../NavBar';
 
 // styles
 import { withStyles } from '@material-ui/core/styles';
-const actionsStyles = theme => ({
-    root: {
-        flexShrink: 0,
-        color: theme.palette.text.secondary,
-        marginLeft: theme.spacing.unit * 2.5,
-    },
-});
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -63,12 +56,44 @@ const styles = theme => ({
     //     marginTop: theme.spacing.unit * 3,
     // },
 });
+const actionsStyles = theme => ({
+	root: {
+		flexShrink: 0,
+		color: theme.palette.text.secondary,
+		marginLeft: theme.spacing.unit * 2.5,
+	},
+});
+const toolbarStyles = theme => ({
+	root: {
+		paddingRight: theme.spacing.unit,
+	},
+	highlight:
+	      theme.palette.type === 'light'
+		      ? {
+			      color: theme.palette.secondary.main,
+			      backgroundColor: lighten(theme.palette.secondary.light, 0.85),
+		      }
+		      : {
+			      color: theme.palette.text.primary,
+			      backgroundColor: theme.palette.secondary.dark,
+		      },
+	spacer: {
+		flex: '1 1 100%',
+	},
+	actions: {
+		color: theme.palette.text.secondary,
+	},
+	title: {
+		flex: '0 0 auto',
+	},
+});
+
+
 let counter = 0;
 function createData(name, calories, fat, carbs, protein) {
     counter += 1;
     return { id: counter, name, calories, fat, carbs, protein };
 }
-
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -78,7 +103,6 @@ function desc(a, b, orderBy) {
     }
     return 0;
 }
-
 function stableSort(array, cmp) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -88,7 +112,6 @@ function stableSort(array, cmp) {
     });
     return stabilizedThis.map(el => el[0]);
 }
-
 function getSorting(order, orderBy) {
     return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
@@ -100,6 +123,8 @@ const rows = [
     { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
     { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
 ];
+
+
 
 class EnhancedTableHead extends React.Component {
     createSortHandler = property => event => {
@@ -151,31 +176,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
-const toolbarStyles = theme => ({
-    root: {
-        paddingRight: theme.spacing.unit,
-    },
-    highlight:
-          theme.palette.type === 'light'
-              ? {
-                  color: theme.palette.secondary.main,
-                  backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-              }
-              : {
-                  color: theme.palette.text.primary,
-                  backgroundColor: theme.palette.secondary.dark,
-              },
-    spacer: {
-        flex: '1 1 100%',
-    },
-    actions: {
-        color: theme.palette.text.secondary,
-    },
-    title: {
-        flex: '0 0 auto',
-    },
-});
 
 let EnhancedTableToolbar = props => {
     const { numSelected, classes } = props;

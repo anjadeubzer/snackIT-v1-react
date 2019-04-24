@@ -9,6 +9,7 @@
     "downshift": "^3.2.7",
     "form-urlencoded": "^3.0.0",
     "node-sass": "^4.11.0",
+    "notistack": "^0.6.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.2",
     "react-document-title": "^2.0.3",

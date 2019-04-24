@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 // main components
 import Router from './components/Router';
 import { Authentication } from './components/AuthenticationContext';
+import { SnackbarProvider } from 'notistack';
 
 // styles
 import './App.scss'; //--> The big container for styles
