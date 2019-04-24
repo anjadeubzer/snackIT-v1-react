@@ -1,7 +1,9 @@
 import React, { Fragment, useState, useContext } from 'react';
-// import Cookies from "js-cookie";
-import formurlencoded from "form-urlencoded";
 import { Redirect } from 'react-router-dom';
+
+// helper components
+import Cookies from "js-cookie";
+import formurlencoded from "form-urlencoded";
 import PropTypes from 'prop-types';
 
 // @material-ui components
@@ -23,119 +25,128 @@ import { AuthenticationContext } from '../AuthenticationContext';
 
 // styles
 import withStyles from '@material-ui/core/styles/withStyles';
-const styles = theme => ({
-    main: {
-        width: 'auto',
-        display: 'block', // Fix IE 11 issue.
-        marginLeft: theme.spacing.unit * 3,
-        marginRight: theme.spacing.unit * 3,
-        [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-            width: 400,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-        },
-    },
-    paper: {
-        marginTop: theme.spacing.unit * 8,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
-    },
-    avatar: {
-        margin: theme.spacing.unit,
-        backgroundColor: theme.palette.secondary.main,
-    },
-    form: {
-        width: '100%', // Fix IE 11 issue.
-        marginTop: theme.spacing.unit,
-    },
-    submit: {
-        marginTop: theme.spacing.unit * 3,
-    },
-});
+const styles = theme => ( {
+	main:   {
+		width:                                                        'auto',
+		display:                                                      'block', // Fix IE 11 issue.
+		marginLeft:                                                   theme.spacing.unit * 3,
+		marginRight:                                                  theme.spacing.unit * 3,
+		[ theme.breakpoints.up( 400 + theme.spacing.unit * 3 * 2 ) ]: {
+			width:       400,
+			marginLeft:  'auto',
+			marginRight: 'auto',
+		},
+	},
+	paper:  {
+		marginTop:     theme.spacing.unit * 8,
+		display:       'flex',
+		flexDirection: 'column',
+		alignItems:    'center',
+		padding:       `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+	},
+	avatar: {
+		margin:          theme.spacing.unit,
+		backgroundColor: theme.palette.secondary.main,
+	},
+	form:   {
+		width:     '100%', // Fix IE 11 issue.
+		marginTop: theme.spacing.unit,
+	},
+	submit: {
+		marginTop: theme.spacing.unit * 3,
+	},
+} );
+
+
 
 const LoginPage = ( props ) => {
-    const { classes } = props;
+	const { classes } = props;
 
-    const token = useContext( AuthenticationContext );
-
-    const [ loggedIn, setLoggedIn ] = useState( false );
-    const [ loginError, setLoginError ] = useState( null );
+	const token = useContext( AuthenticationContext );
+	const [ loginError, setLoginError ] = useState( null );
 
 
-    const handleLogin = ( event ) => {
-        event.preventDefault();
+	const handleLogin = ( event ) => {
+		event.preventDefault();
 
-        const username = event.target.email.value;
-        const password = event.target.password.value;
-        let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/jwt-auth/v1/token";
+		const username = event.target.email.value;
+		const password = event.target.password.value;
+		let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/jwt-auth/v1/token";
 
-        fetch( restApiUrl, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: formurlencoded({
-                username: username,
-                password: password
-            })
-        })
-            .then( response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    throw response;
-                }
-            })
-            .then( response => {
-                setLoggedIn( true );
-                token.setWpToken( response.token );
-                token.setWpUser( response.user_display_name );
-                console.log("Logged in");
-            })
-            .catch(error => {
-                console.error( error );
-                // return error.json().then(error => {
-                //     console.error( error );
-                //     setLoginError( error.message );
-                // });
-            });
-    };
+		fetch( restApiUrl, {
+			method:  "POST",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			},
+			body:    formurlencoded( {
+				username: username,
+				password: password
+			} )
+		} )
+			.then( response => {
+				if ( response.ok ) {
+					return response.json();
+				}
+				else {
+					throw response;
+				}
+			} )
+			.then( response => {
 
+				if ( response.token !== undefined ) {
+					// Set a secure cookie with the authentication token
+					Cookies.set( 'wpToken' , response.token , {
+						expires: 7,
+						secure: true
+					});
+					console.log( "Logged in" );
 
-    // const handleLogout = () => {
-    //     token.setWpToken( null );
-    // };
+					// set LoginStatus, Token and Username
+					token.setWpLoggedIn( true );
+					token.setWpToken( response.token );
+					token.setWpUser( response.user_display_name );
+				}
+				else {
+					// Executed when response code is not 200
+					setLoginError("Login failed, please check credentials and try again!");
+					console.log( "Login ERROR" );
+				}
 
+			} )
+			.catch( error => {
+				console.error( error );
+				setLoginError("Login failed, please check credentials and try again!");
+				console.log( "Login ERROR" );
+			} );
+	};
 
-    return (
-        <Fragment>
+	return (
+		<Fragment>
             { /** when Login was successfull we will redirect to the SnackPage **/ }
-            { token.wpToken &&
-            <Redirect to="/snacksPage" />
-            }
+			{ token.wpToken &&
+			<Redirect to="/snacksPage" />
+			}
 
-            { /** user login & links to Settings/FAQs/help email **/ }
-            <NavBar />
+			{ /** user login & links to Settings/FAQs/help email **/ }
+			<NavBar />
 
 
-            { /** login form **/ }
-            <main className={classes.main}>
+			{ /** login form **/ }
+			<main className={ classes.main }>
                 <CssBaseline />
-                <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar}>
+                <Paper className={ classes.paper }>
+                    <Avatar className={ classes.avatar }>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">Sign in</Typography>
-                    <p>You are currently {loggedIn ? "" : "not"} logged in.</p>
-                    { loginError && (
-                        <p dangerouslySetInnerHTML={{ __html: loginError }} />
-                    )}
-                    <form
-                        className={classes.form}
-                        onSubmit={ handleLogin }
-                    >
+                    <p>You are currently { token.wpLoggedIn ? "" : "not" } logged in.</p>
+	                { loginError && (
+		                <p dangerouslySetInnerHTML={ { __html: loginError } } />
+	                ) }
+	                <form
+		                className={ classes.form }
+		                onSubmit={ handleLogin }
+	                >
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="email">Email Address</InputLabel>
                             <Input id="email" name="email" autoComplete="email" autoFocus />
@@ -145,15 +156,15 @@ const LoginPage = ( props ) => {
                             <Input name="password" type="password" id="password" autoComplete="current-password" />
                         </FormControl>
                         <FormControlLabel
-                            control={<Checkbox value="remember" color="primary" />}
-                            label="Remember me"
+	                        control={ <Checkbox value="remember" color="primary" /> }
+	                        label="Remember me"
                         />
                         <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            className={ classes.submit }
+	                        type="submit"
+	                        fullWidth
+	                        variant="contained"
+	                        color="primary"
+	                        className={ classes.submit }
                         >
                             Sign in
                         </Button>
@@ -162,11 +173,11 @@ const LoginPage = ( props ) => {
             </main>
 
         </Fragment>
-    );
+	);
 }
 
 LoginPage.propTypes = {
-    classes: PropTypes.object.isRequired,
+	classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(LoginPage);
+export default withStyles( styles )( LoginPage );

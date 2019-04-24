@@ -189,12 +189,12 @@ let EnhancedTableToolbar = props => {
       <div className={classes.title}>
         {numSelected > 0 ? (
             <Typography color="inherit" variant="subtitle1">
-            {numSelected} selected
-          </Typography>
+                {numSelected} selected
+            </Typography>
         ) : (
             <Typography variant="h6" id="tableTitle">
-            Nutrition
-          </Typography>
+                Nutrition
+            </Typography>
         )}
       </div>
       <div className={classes.spacer} />

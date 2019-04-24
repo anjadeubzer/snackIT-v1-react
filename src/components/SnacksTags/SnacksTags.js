@@ -1,16 +1,13 @@
 import React, { useEffect, useContext, useState } from 'react';
 
 // @material-ui components
-// import Typography from '@material-ui/core/Typography';
-// import Grid from '@material-ui/core/Grid';
-// import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 
 // helper components
 import PropTypes from 'prop-types';
 import { SnackItContext } from "../SnackItContext";
 import { filterSnacks } from "../HelperFunctions/filterSnacks";
-import DoneIcon from '@material-ui/icons/Done';
 
 // child components
 import { withStyles } from '@material-ui/core/styles';
@@ -54,7 +51,6 @@ const SnacksTags = ( { classes } ) => {
 	return (
 		<div className={classes.filterSnackGroups}>
 			{ snackGroups ? (
-
 				<div>
 					{ Object.keys( snackGroups ).map( key => (
 						<Chip
@@ -68,7 +64,6 @@ const SnacksTags = ( { classes } ) => {
 						/>
 					))}
 				</div>
-
 			) : <div>'No filter tags rendered'</div>
 			}
 		</div>
