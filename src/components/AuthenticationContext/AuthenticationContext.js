@@ -6,6 +6,7 @@ const Authentication = ( props ) => {
     const [ wpLoggedIn, setWpLoggedIn ] = useState( false );
     const [ wpToken, setWpToken ] = useState( null );
     const [ wpUser, setWpUser ] = useState( null );
+    const [ wpUserID, setWpUserID ] = useState( null );
 
     const token = {
 	    wpLoggedIn: wpLoggedIn,
@@ -14,6 +15,8 @@ const Authentication = ( props ) => {
         setWpToken: setWpToken,
         wpUser: wpUser,
         setWpUser: setWpUser,
+        wpUserID: wpUserID,
+        setWpUserID: setWpUserID,
     };
 
     return (

@@ -42,14 +42,20 @@ const Snacks = ( props ) => {
 				const snackData = res.map( ( snack ) => {
 
 					// If images are not set revert to default image
-					let snackGroup = '';
-					let defaultImageUrl = "https://placeimg.com/300/300/animals/" + snack.id;
+					let snackGroup = [];
+					let defaultImageUrl = "https://snackit-v1.ritapbest.io/wp-content/uploads/2019/04/snack_default.jpg";
 					if ( snack._embedded[ 'wp:featuredmedia' ] ) {
 						defaultImageUrl = snack._embedded[ 'wp:featuredmedia' ][ 0 ].media_details.sizes.thumbnail.source_url;
 					}
-					// if ( snack._embedded[ 'wp:term' ] ) {
-					// 	snackGroup = snack._embedded[ 'wp:term' ][ 0 ][ 0 ].name;
-					// }
+					if ( snack._embedded[ 'wp:term' ] ) {
+						snackGroup =
+							snack._embedded[ 'wp:term' ][0].map( (key) => {
+								return key.name + " / "
+							}
+						);
+					} else {
+						snackGroup = [ 'no_group' ];
+					}
 
 					return Object.assign(
 						{},
@@ -59,11 +65,11 @@ const Snacks = ( props ) => {
 							slug:        snack.slug,
 							content:     snack.content.rendered,
 							description: snack.meta.snack_description,
-							snack_size:  snack.meta.snack_size,
-							snack_price: snack.meta.snack_price,
-							snack_brand: ( snack.meta.snack_brand ? snack.meta.snack_brand : '-' ),
+							snack_size:  ( snack.meta.snack_size ? snack.meta.snack_size : '100ml' ),
+							snack_price: ( snack.meta.snack_price ? snack.meta.snack_price : '50' ),
+							snack_brand: ( snack.meta.snack_brand ? snack.meta.snack_brand : '' ),
 							imageUrl:    defaultImageUrl,
-							snack_group: ( snack._embedded[ 'wp:term' ][ 0 ][ 0 ] ? snack._embedded[ 'wp:term' ][ 0 ][ 0 ].name : 'no_group' ),
+							snack_group: snackGroup,
 						}
 					);
 				} );

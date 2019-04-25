@@ -60,7 +60,7 @@ const SnacksTags = ( { classes } ) => {
 							index={ key }
 							label={ snackGroups[key].name }
 							onClick={ () => handleClick(snackGroups[key].name) }
-							icon={ (iconDisplay == snackGroups[key].name) ? <DoneIcon /> : 'none' }
+							icon={ (iconDisplay == snackGroups[key].name) ? <DoneIcon /> : null }
 						/>
 					))}
 				</div>

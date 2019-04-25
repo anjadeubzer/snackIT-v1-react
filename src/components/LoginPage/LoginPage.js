@@ -105,6 +105,22 @@ const LoginPage = ( props ) => {
 					token.setWpLoggedIn( true );
 					token.setWpToken( response.token );
 					token.setWpUser( response.user_display_name );
+					token.setWpUserID( response.user_id );
+
+					// let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+					// window.fetch( restApiUrl + 'users/me' )
+					// 	.then( ( res ) => {
+					// 		if ( res.ok ) {
+					// 			return res.json();
+					// 		}
+					// 		throw res.error;
+					// 	} )
+					// 	.then( ( res ) => {
+					// 		token.setWpUserID( res. );
+					// 	} )
+					// 	.catch( ( fetchError ) => {
+					// 		// setError( fetchError );
+					// 	} );
 				}
 				else {
 					// Executed when response code is not 200

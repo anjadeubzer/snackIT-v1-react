@@ -2,7 +2,6 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 
-
 // @material-ui components
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -27,6 +26,9 @@ import LastPageIcon from '@material-ui/icons/LastPage';
 
 // child components
 import NavBar from '../NavBar';
+
+//helper functions
+import { formatPrice } from '../HelperFunctions/formatPrice';
 
 // styles
 import { withStyles } from '@material-ui/core/styles';
@@ -90,10 +92,12 @@ const toolbarStyles = theme => ({
 
 
 let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
+
+function createData( snack_title, purchase_price, purchase_date) {
     counter += 1;
-    return { id: counter, name, calories, fat, carbs, protein };
+    return { id: counter, snack_title, purchase_price, purchase_date };
 }
+
 function desc(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -103,6 +107,7 @@ function desc(a, b, orderBy) {
     }
     return 0;
 }
+
 function stableSort(array, cmp) {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -117,11 +122,10 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-    { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
-    { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
-    { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-    { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-    { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+	// { id: 'snack_id', numeric: true, disablePadding: false, label: 'Snack ID' },
+    { id: 'snack_title', numeric: false, disablePadding: true, label: 'Snack' },
+    { id: 'purchase_price', numeric: true, disablePadding: false, label: 'Price' },
+    { id: 'purchase_date', numeric: true, disablePadding: false, label: 'Date' },
 ];
 
 
@@ -193,7 +197,7 @@ let EnhancedTableToolbar = props => {
             </Typography>
         ) : (
             <Typography variant="h6" id="tableTitle">
-                Nutrition
+                Your Purchased Snacks
             </Typography>
         )}
       </div>
@@ -210,29 +214,41 @@ EnhancedTableToolbar.propTypes = {
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 
+let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
+
+let snackPurchases = {};
+// first get the Snacks
+window.fetch( restApiUrl + 'snackpurchase?_embed=1&per_page=100' )
+    .then( ( res ) => {
+        if ( res.ok ) {
+            return res.json();
+        }
+        throw res.error;
+    } )
+    .then( ( res ) => {
+        snackPurchases = res.map( ( purchase ) => {
+            createData( purchase.key, purchase.title.rendered, purchase.meta.snack_id, purchase.meta.purchase_price, purchase.date )
+        });
+    } )
+    .catch( ( fetchError ) => {
+        // setError( fetchError );
+    } );
+console.log( snackPurchases );
+
 
 class EnhancedTable extends React.Component {
     state = {
         order: 'asc',
-        orderBy: 'calories',
+        orderBy: 'purchase_date',
         selected: [],
         data: [
-            createData('Cupcake', 305, 3.7, 67, 4.3),
-            createData('Donut', 452, 25.0, 51, 4.9),
-            createData('Eclair', 262, 16.0, 24, 6.0),
-            createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-            createData('Gingerbread', 356, 16.0, 49, 3.9),
-            createData('Honeycomb', 408, 3.2, 87, 6.5),
-            createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-            createData('Jelly Bean', 375, 0.0, 94, 0.0),
-            createData('KitKat', 518, 26.0, 65, 7.0),
-            createData('Lollipop', 392, 0.2, 98, 0.0),
-            createData('Marshmallow', 318, 0, 81, 2.0),
-            createData('Nougat', 360, 19.0, 9, 37.0),
-            createData('Oreo', 437, 18.0, 63, 4.0),
+            createData('Cupcake', 50, '2019-04-24'),
+            createData('Donut', 25, '2019-04-24'),
+            createData('Eclair', 100, '2019-04-24'),
+            createData('Frozen yoghurt', 100, '2019-04-24'),
         ],
         page: 0,
-        rowsPerPage: 5,
+        rowsPerPage: 12,
     };
 
     handleRequestSort = (event, property) => {
@@ -324,20 +340,19 @@ class EnhancedTable extends React.Component {
                                             key={n.id}
                                             selected={isSelected}
                                         >
+                                            {/*<TableCell align="right">{n.snack_id}</TableCell>*/}
                                             <TableCell component="th" scope="row" padding="none">
-                                                {n.name}
+                                                {n.snack_title}
                                             </TableCell>
-                                            <TableCell align="right">{n.calories}</TableCell>
-                                            <TableCell align="right">{n.fat}</TableCell>
-                                            <TableCell align="right">{n.carbs}</TableCell>
-                                            <TableCell align="right">{n.protein}</TableCell>
+                                            <TableCell align="right">{ formatPrice( n.purchase_price ) }</TableCell>
+                                            <TableCell align="right">{ n.purchase_date }</TableCell>
                                         </TableRow>
                                     );
                                 })
                             }
                             {emptyRows > 0 && (
                                 <TableRow style={{ height: 49 * emptyRows }}>
-                                    <TableCell colSpan={6} />
+                                    <TableCell colSpan={4} />
                                 </TableRow>
                             )}
                         </TableBody>
@@ -345,7 +360,7 @@ class EnhancedTable extends React.Component {
                 </div>
 
                 <TablePagination
-                    rowsPerPageOptions={[5, 10, 25]}
+                    rowsPerPageOptions={[12, 24, 48, 72]}
                     component="div"
                     count={data.length}
                     rowsPerPage={rowsPerPage}
@@ -361,7 +376,6 @@ class EnhancedTable extends React.Component {
                 />
             </Paper>
             </Fragment>
-
         );
     }
 }
