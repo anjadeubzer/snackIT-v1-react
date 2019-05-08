@@ -67,7 +67,9 @@ const actionsStyles = theme => ({
 });
 const toolbarStyles = theme => ({
 	root: {
-		paddingRight: theme.spacing.unit,
+		// paddingRight: theme.spacing.unit,
+		paddingRight: 0,
+		paddingLeft: 0,
 	},
 	highlight:
 	      theme.palette.type === 'light'
@@ -93,9 +95,9 @@ const toolbarStyles = theme => ({
 
 let counter = 0;
 
-function createData( snack_title, purchase_price, purchase_date) {
+function createData( key, snack_title, purchase_price, purchase_date) {
     counter += 1;
-    return { id: counter, snack_title, purchase_price, purchase_date };
+    return { id: key, snack_title, purchase_price, purchase_date };
 }
 
 function desc(a, b, orderBy) {
@@ -120,6 +122,8 @@ function stableSort(array, cmp) {
 function getSorting(order, orderBy) {
     return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
+
+
 
 const rows = [
 	// { id: 'snack_id', numeric: true, disablePadding: false, label: 'Snack ID' },
@@ -149,20 +153,20 @@ class EnhancedTableHead extends React.Component {
                         padding={row.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === row.id ? order : false}
                     >
-                <Tooltip
-                    title="Sort"
-                    placement={row.numeric ? 'bottom-end' : 'bottom-start'}
-                    enterDelay={300}
-                >
-                  <TableSortLabel
-                      active={orderBy === row.id}
-                      direction={order}
-                      onClick={this.createSortHandler(row.id)}
-                  >
-                    {row.label}
-                  </TableSortLabel>
-                </Tooltip>
-              </TableCell>
+                        <Tooltip
+                            title="Sort"
+                            placement={row.numeric ? 'bottom-end' : 'bottom-start'}
+                            enterDelay={300}
+                        >
+                            <TableSortLabel
+                                active={orderBy === row.id}
+                                direction={order}
+                                onClick={this.createSortHandler(row.id)}
+                            >
+                                {row.label}
+                            </TableSortLabel>
+                        </Tooltip>
+                    </TableCell>
                 ),
                 this,
             )}
@@ -190,17 +194,17 @@ let EnhancedTableToolbar = props => {
                 [classes.highlight]: numSelected > 0,
             })}
         >
-      <div className={classes.title}>
-        {numSelected > 0 ? (
-            <Typography color="inherit" variant="subtitle1">
-                {numSelected} selected
-            </Typography>
-        ) : (
-            <Typography variant="h6" id="tableTitle">
-                Your Purchased Snacks
-            </Typography>
-        )}
-      </div>
+            <div className={classes.title}>
+            {numSelected > 0 ? (
+                <Typography color="inherit" variant="subtitle1">
+                    {numSelected} selected
+                </Typography>
+            ) : (
+                <Typography variant="h6" id="tableTitle">
+                    Your Purchased Snacks
+                </Typography>
+            )}
+            </div>
       <div className={classes.spacer} />
     </Toolbar>
     );
@@ -214,11 +218,12 @@ EnhancedTableToolbar.propTypes = {
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 
-let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
 
+
+let restApiUrl = "https://snackit-v1.ritapbest.io/wp-json/wp/v2/";
 let snackPurchases = {};
 // first get the Snacks
-window.fetch( restApiUrl + 'snackpurchase?_embed=1&per_page=100' )
+window.fetch( restApiUrl + 'snackpurchase?_embed=1&per_page=100&author=2' )
     .then( ( res ) => {
         if ( res.ok ) {
             return res.json();
@@ -226,29 +231,42 @@ window.fetch( restApiUrl + 'snackpurchase?_embed=1&per_page=100' )
         throw res.error;
     } )
     .then( ( res ) => {
-        snackPurchases = res.map( ( purchase ) => {
-            createData( purchase.key, purchase.title.rendered, purchase.meta.snack_id, purchase.meta.purchase_price, purchase.date )
-        });
+
+        snackPurchases = res.map( (purchase, index)  => {
+            let date =
+                    new Date(purchase.date).toLocaleDateString() +
+                    ' um ' +
+                    new Date(purchase.date).toLocaleTimeString() +
+                    ' Uhr';
+
+            return Object.assign(
+                {},
+                {
+                    key:            index,
+                    snack_title:    purchase.title.rendered,
+                    snack_id:       purchase.meta.snack_id,
+                    purchase_price: purchase.meta.purchase_price,
+                    purchase_date:  date,
+                }
+            );
+        } );
+
+        console.log( snackPurchases );
     } )
     .catch( ( fetchError ) => {
         // setError( fetchError );
     } );
-console.log( snackPurchases );
 
 
 class EnhancedTable extends React.Component {
+
     state = {
-        order: 'asc',
+        order: 'desc',
         orderBy: 'purchase_date',
         selected: [],
-        data: [
-            createData('Cupcake', 50, '2019-04-24'),
-            createData('Donut', 25, '2019-04-24'),
-            createData('Eclair', 100, '2019-04-24'),
-            createData('Frozen yoghurt', 100, '2019-04-24'),
-        ],
+        data: snackPurchases,
         page: 0,
-        rowsPerPage: 12,
+        rowsPerPage: 8,
     };
 
     handleRequestSort = (event, property) => {
@@ -270,27 +288,6 @@ class EnhancedTable extends React.Component {
         this.setState({ selected: [] });
     };
 
-    handleClick = (event, id) => {
-        const { selected } = this.state;
-        const selectedIndex = selected.indexOf(id);
-        let newSelected = [];
-
-        if (selectedIndex === -1) {
-            newSelected = newSelected.concat(selected, id);
-        } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-            newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-            newSelected = newSelected.concat(
-                selected.slice(0, selectedIndex),
-                selected.slice(selectedIndex + 1),
-            );
-        }
-
-        this.setState({ selected: newSelected });
-    };
-
     handleChangePage = (event, page) => {
         this.setState({ page });
     };
@@ -298,8 +295,6 @@ class EnhancedTable extends React.Component {
     handleChangeRowsPerPage = event => {
         this.setState({ rowsPerPage: event.target.value });
     };
-
-    isSelected = id => this.state.selected.indexOf(id) !== -1;
 
     render() {
         const { classes } = this.props;
@@ -327,23 +322,15 @@ class EnhancedTable extends React.Component {
                         <TableBody>
                             {stableSort(data, getSorting(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(n => {
-                                    const isSelected = this.isSelected(n.id);
-
+                                .map( n => {
                                     return (
                                         <TableRow
                                             hover
-                                            onClick={event => this.handleClick(event, n.id)}
                                             role="checkbox"
-                                            aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={n.id}
-                                            selected={isSelected}
+                                            key={ n.key }
                                         >
-                                            {/*<TableCell align="right">{n.snack_id}</TableCell>*/}
-                                            <TableCell component="th" scope="row" padding="none">
-                                                {n.snack_title}
-                                            </TableCell>
+                                            <TableCell scope="row">{n.snack_title}</TableCell>
                                             <TableCell align="right">{ formatPrice( n.purchase_price ) }</TableCell>
                                             <TableCell align="right">{ n.purchase_date }</TableCell>
                                         </TableRow>
@@ -360,7 +347,7 @@ class EnhancedTable extends React.Component {
                 </div>
 
                 <TablePagination
-                    rowsPerPageOptions={[12, 24, 48, 72]}
+                    rowsPerPageOptions={[8, 16, 24, 48, 80]}
                     component="div"
                     count={data.length}
                     rowsPerPage={rowsPerPage}
